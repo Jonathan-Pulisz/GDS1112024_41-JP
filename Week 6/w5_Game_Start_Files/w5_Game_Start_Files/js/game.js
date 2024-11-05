@@ -11,9 +11,11 @@ var fps = 1000/60
 var timer = setInterval(main, fps)
 var score = 0;
 
+//start = 0, game = 1, gameOver = 2
 var gameScenes = ["start", "game", "gameOver"];
 var currentScene = gameScenes[1];
 
+var krabbyPatty = document.getElementById("KrabbyPatty");
 
 /*------------Declare Variables Here--------*/
 var player = new GameObject();
@@ -92,6 +94,7 @@ function game(){
     for(var i = 0; i<enemies.length; i++){
         enemies[i].move();
         enemies[i].render();
+        enemies[i].renderImage(krabbyPatty);
         //reset them off screen from bottom
         if(enemies[i].y > c.height + enemies[i].h){
             enemies[i].y = rand(-c.height, 0);
