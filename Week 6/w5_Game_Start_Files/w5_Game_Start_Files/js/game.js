@@ -9,12 +9,16 @@ var c = document.querySelector(`canvas`)
 var ctx = c.getContext(`2d`)
 var fps = 1000/60
 var timer = setInterval(main, fps)
+var score = 0;
+
+var gameScenes = ["start", "game", "gameOver"];
+var currentScene = gameScenes[1];
 
 
 /*------------Declare Variables Here--------*/
 var player = new GameObject();
 player.color = "orange";
-player.w = 40;
+player.w = 150;
 player.h = 40;
 player.friction = 0.9;
 var playerSpeed = 5;
@@ -30,6 +34,7 @@ for(var i = 0; i<numberOfEnemies; i++){
     enemies[i].color = "red";
     enemies[i].w = 30;
     enemies[i].h = 30;
+    enemies[i].vy = 3;
     enemies[i].x = rand(0, c.width);
     enemies[i].y = rand(0, c.height);
 
@@ -42,11 +47,32 @@ This is the function that makes the game work
 
 function main()
 {
-    //erases the screen
+     //erases the screen
     ctx.clearRect(0,0,c.width,c.height); 
+    switch(currentScene){
+        case "start":
+            console.log(currentScene);
+            ctx.font = "60px Arial";
+            ctx.fillText('Play My Game', c.width/2 - 200, c.height/2);
+            break;
+        case "game":
+            console.log(currentScene);
+            game();
+            break;
+        case "gameOver":
+            console.log(currentScene);
+            ctx.font = "60px Arial";
+            ctx.fillText('You Win!!!', c.width/2 - 150, c.height/2);
+            break;
+    }
+   
 
-    //Any changes to numbers
-    if(a==true || left==true){
+
+}
+
+function game(){
+      //Any changes to numbers
+      if(a==true || left==true){
         player.vx = -playerSpeed;
     }
     if(d==true || right==true){
@@ -64,12 +90,38 @@ function main()
 
     //draw the pictures
     for(var i = 0; i<enemies.length; i++){
+        enemies[i].move();
         enemies[i].render();
+        //reset them off screen from bottom
+        if(enemies[i].y > c.height + enemies[i].h){
+            enemies[i].y = rand(-c.height, 0);
+            enemies[i].x = rand(0, c.width);
+            if(enemies[i].vy ==3){
+                if(score > 0){
+                    score --;
+                }
+        }
+        }
+
+        //reset enemies from top of screen
+        if(enemies[i].y < - enemies[i].h){
+            enemies[i].y = rand(-c.height, 0);
+            enemies[i].x = rand(0, c.width);
+        if(enemies[i].vy == -3){
+            score++;
+            enemies[i].vy = 3;
+        } 
+        }
+
+        if(player.overlaps(enemies[i])){
+            enemies[i].vy = -3;
+        }
     }
     player.move();
     player.render();
+    ctx.font = "60px Arial";
+    ctx.fillText(`Score: ${score}`, 200, 150);
 }
-
 //random number generator
 function rand(_low, _high)
 {
