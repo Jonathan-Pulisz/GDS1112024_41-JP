@@ -93,7 +93,7 @@ function game(){
     //draw the pictures
     for(var i = 0; i<enemies.length; i++){
         enemies[i].move();
-        enemies[i].render();
+        //enemies[i].render();
         enemies[i].renderImage(krabbyPatty);
         //reset them off screen from bottom
         if(enemies[i].y > c.height + enemies[i].h){
